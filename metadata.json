@@ -1,0 +1,6 @@
+{
+  "name": "Safe2Odds Nigeria",
+  "description": "Smart Tips. Better Decisions. Modern mobile-first football betting tips, automated results tracking, live scores, beginner betting guides, and fans prediction community in Nigeria.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

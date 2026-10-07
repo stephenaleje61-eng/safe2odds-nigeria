@@ -1,0 +1,99 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function getUserRole() {
+      return request.auth.token.role;
+    }
+    
+    function isStaff() {
+      return isAuthenticated() && (getUserRole() == 'moderator' || getUserRole() == 'admin' || getUserRole() == 'super_admin');
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && (getUserRole() == 'admin' || getUserRole() == 'super_admin');
+    }
+
+    // 1. Users collection (Private credentials & settings)
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isStaff();
+      allow create: if isOwner(userId) && request.resource.data.role == 'user';
+      // User can NEVER update their own role or account status
+      allow update: if isOwner(userId) 
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'account_status', 'points']);
+      allow delete: if isAdmin();
+    }
+
+    // 2. Profiles collection (Public info)
+    match /profiles/{userId} {
+      allow read: if true;
+      allow create: if isOwner(userId) 
+        && request.resource.data.points == 0 
+        && request.resource.data.totalWins == 0 
+        && request.resource.data.winRate == 0;
+      // Normal users cannot directly touch points, winRate, wins, or role!
+      allow update: if isOwner(userId) 
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['points', 'totalWins', 'totalLosses', 'winRate', 'role', 'accountStatus'])
+        || isStaff();
+      allow delete: if isAdmin();
+    }
+
+    // 3. Predictions collection
+    match /predictions/{predId} {
+      allow read: if resource.data.isHidden != true || isStaff();
+      allow create: if isAuthenticated() 
+        && request.resource.data.authorId == request.auth.uid
+        && request.resource.data.status == 'PENDING';
+      // Only staff/admin can verify status (WON, LOST, VOID)
+      allow update: if isStaff() 
+        || (isOwner(resource.data.authorId) && resource.data.status == 'PENDING' 
+            && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['status', 'verifiedAt', 'verifiedBy', 'isReported']));
+      allow delete: if isStaff();
+    }
+
+    // 4. Points Transactions (IMMUTABLE - SERVER ONLY)
+    match /points_transactions/{txnId} {
+      allow read: if isAuthenticated() && (resource.data.userId == request.auth.uid || isStaff());
+      // Clients NEVER directly create or update points transactions
+      allow create, update, delete: if false; // Must be executed via Cloud Functions / Server Admin SDK
+    }
+
+    // 5. Reports
+    match /reports/{reportId} {
+      allow read: if isStaff() || (isAuthenticated() && resource.data.reporterId == request.auth.uid);
+      allow create: if isAuthenticated() && request.resource.data.reporterId == request.auth.uid;
+      allow update: if isStaff();
+      allow delete: if isAdmin();
+    }
+
+    // 6. User Blocks
+    match /user_blocks/{blockId} {
+      allow read, delete: if isAuthenticated() && resource.data.blockerId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.blockerId == request.auth.uid;
+      allow update: if false;
+    }
+
+    // 7. Notifications
+    match /notifications/{notifId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid 
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+      allow create, delete: if isStaff();
+    }
+
+    // 8. Admin Audit Logs (IMMUTABLE)
+    match /admin_audit_logs/{logId} {
+      allow read: if isAdmin();
+      allow create, update, delete: if false; // Written only by trusted server
+    }
+  }
+}

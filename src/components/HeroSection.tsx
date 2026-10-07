@@ -1,0 +1,197 @@
+import React from 'react';
+import { ShieldCheck, MessageCircle, ArrowRight, TrendingUp, Sparkles, CheckCircle2 } from 'lucide-react';
+import { AppSettings, BettingTip } from '../types';
+
+interface HeroSectionProps {
+  settings: AppSettings;
+  todayTips: BettingTip[];
+  stats: {
+    won: number;
+    lost: number;
+    winRate: number;
+    netOddsFormatted: string;
+  };
+  onViewTips: () => void;
+  onJoinWhatsApp: () => void;
+}
+
+export const HeroSection: React.FC<HeroSectionProps> = ({
+  settings,
+  todayTips,
+  stats,
+  onViewTips,
+  onJoinWhatsApp,
+}) => {
+  // Compute combined odds of the top 2 today's pending safe selections
+  const safePicks = todayTips.filter(t => !t.isVip && t.status === 'Pending').slice(0, 2);
+  const combinedCalculatedOdds = safePicks.length >= 2 
+    ? (safePicks[0].odds * safePicks[1].odds).toFixed(2)
+    : settings.targetOdds.toFixed(2);
+
+  return (
+    <section className="relative overflow-hidden bg-[#111827] text-white">
+      {/* Background Image with Dark Contrast Scrim */}
+      <div className="absolute inset-0 z-0">
+        <img
+          src="/src/assets/images/hero_football_stadium_1791379697899.jpg"
+          alt="Football stadium under lights"
+          className="w-full h-full object-cover object-center opacity-30 mix-blend-luminosity scale-105"
+          referrerPolicy="no-referrer"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#111827] via-[#111827]/85 to-[#111827]/70" />
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          
+          {/* Main Hero Copy */}
+          <div className="lg:col-span-7 flex flex-col items-start text-left">
+            
+            {/* Trust badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-600/40 text-emerald-300 text-xs font-semibold mb-5 shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Smart Statistical Modeling · Nigeria's Trusted Tips</span>
+            </div>
+
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] text-white mb-4 text-balance">
+              Today's <span className="text-[#16A34A] underline decoration-green-500/40 underline-offset-8">Safe 2 Odds</span>
+            </h1>
+
+            <p className="text-base sm:text-lg text-gray-300 max-w-2xl font-normal leading-relaxed mb-8">
+              Carefully selected football tips to help you make informed betting decisions. Conservative markets, rigorous statistics, zero hype.
+            </p>
+
+            {/* CTAs */}
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 w-full sm:w-auto mb-8">
+              <button
+                onClick={onViewTips}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#16A34A] hover:bg-[#15803D] text-white font-bold text-sm px-6 py-3.5 rounded-xl shadow-lg shadow-green-900/30 transition-transform active:scale-95"
+              >
+                <span>View Today's Tips</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <a
+                href={settings.whatsAppLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={onJoinWhatsApp}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 text-white font-semibold text-sm px-6 py-3.5 rounded-xl border border-white/20 backdrop-blur-xs transition-colors"
+              >
+                <MessageCircle className="w-4 h-4 text-green-400 fill-current" />
+                <span>Join WhatsApp Community</span>
+              </a>
+            </div>
+
+            {/* Verified Statistics Bar (Adjacency proof) */}
+            <div className="w-full pt-6 border-t border-gray-800/80 grid grid-cols-2 sm:grid-cols-4 gap-4 text-left">
+              <div>
+                <span className="block text-[11px] font-medium text-gray-400 uppercase tracking-wider">
+                  Last 7 Days Won
+                </span>
+                <span className="text-xl sm:text-2xl font-extrabold text-green-400 tabular-nums">
+                  {stats.won} Tips
+                </span>
+              </div>
+              <div>
+                <span className="block text-[11px] font-medium text-gray-400 uppercase tracking-wider">
+                  Settled Losses
+                </span>
+                <span className="text-xl sm:text-2xl font-extrabold text-gray-200 tabular-nums">
+                  {stats.lost}
+                </span>
+              </div>
+              <div>
+                <span className="block text-[11px] font-medium text-gray-400 uppercase tracking-wider">
+                  Win Rate
+                </span>
+                <span className="text-xl sm:text-2xl font-extrabold text-white tabular-nums">
+                  {stats.winRate}%
+                </span>
+              </div>
+              <div>
+                <span className="block text-[11px] font-medium text-gray-400 uppercase tracking-wider">
+                  Net Profit Impact
+                </span>
+                <span className="text-xl sm:text-2xl font-extrabold text-emerald-300 tabular-nums">
+                  {stats.netOddsFormatted}
+                </span>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Right Card: Today's Featured 2-Odds Combination Ticket */}
+          <div className="lg:col-span-5">
+            <div className="bg-gradient-to-b from-gray-800/90 to-gray-900/95 border border-gray-700 rounded-3xl p-6 sm:p-7 shadow-2xl backdrop-blur-md relative overflow-hidden">
+              <div className="absolute top-0 right-0 transform translate-x-4 -translate-y-4 w-32 h-32 bg-green-500/10 rounded-full blur-2xl pointer-events-none" />
+
+              <div className="flex items-center justify-between pb-4 border-b border-gray-700/80 mb-5">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 rounded-lg bg-green-500/20 text-green-400">
+                    <TrendingUp className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-white uppercase tracking-wider">
+                      Today's Banker Slip
+                    </h3>
+                    <span className="text-[11px] text-gray-400">Verified Mathematical Selection</span>
+                  </div>
+                </div>
+                
+                {/* Prominent Target Odds Badge */}
+                <div className="text-right">
+                  <span className="text-[10px] uppercase font-bold text-green-400 block tracking-wider">Target Odds</span>
+                  <span className="text-2xl sm:text-3xl font-black text-white tabular-nums tracking-tight">
+                    {combinedCalculatedOdds}
+                  </span>
+                </div>
+              </div>
+
+              {/* Match Slips preview */}
+              <div className="space-y-3 mb-5">
+                {safePicks.map((tip, idx) => (
+                  <div key={tip.id} className="p-3.5 rounded-xl bg-gray-950/60 border border-gray-800 flex items-center justify-between">
+                    <div>
+                      <div className="flex items-center gap-1.5 text-[11px] text-gray-400 mb-1">
+                        <span className="text-green-400 font-semibold">{tip.league}</span>
+                        <span>·</span>
+                        <span>Today {tip.time}</span>
+                      </div>
+                      <div className="text-xs sm:text-sm font-bold text-white">
+                        {tip.homeTeam} vs {tip.awayTeam}
+                      </div>
+                      <div className="text-xs text-gray-300 font-medium mt-0.5">
+                        Pick: <span className="text-green-300">{tip.predictionDetail || tip.prediction}</span>
+                      </div>
+                    </div>
+                    <div className="text-right pl-3 shrink-0">
+                      <span className="text-xs font-bold text-white bg-gray-800 px-2.5 py-1 rounded-lg border border-gray-700 tabular-nums">
+                        @{tip.odds.toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Slip Footer */}
+              <div className="pt-4 border-t border-gray-800 flex items-center justify-between text-xs">
+                <div className="text-gray-400">
+                  <span className="text-white font-bold">{safePicks.length} Games</span> combined
+                </div>
+                <button
+                  onClick={onViewTips}
+                  className="font-bold text-green-400 hover:text-green-300 inline-flex items-center gap-1 transition-colors"
+                >
+                  View full analysis & copy <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  );
+};
