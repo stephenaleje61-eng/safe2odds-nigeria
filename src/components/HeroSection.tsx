@@ -49,16 +49,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             
             {/* Trust badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-600/40 text-emerald-300 text-xs font-semibold mb-5 shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Smart Statistical Modeling · Nigeria's Trusted Tips</span>
+              <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+              <span>Worldwide Coverage · 100% Real Match Data</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] text-white mb-4 text-balance">
-              Today's <span className="text-[#16A34A] underline decoration-green-500/40 underline-offset-8">Safe 2 Odds</span>
+              Welcome to <span className="text-[#16A34A]">2 Sure Odd</span> <span className="text-red-500 underline decoration-red-500/40 underline-offset-8">Football</span>
             </h1>
 
             <p className="text-base sm:text-lg text-gray-300 max-w-2xl font-normal leading-relaxed mb-8">
-              Carefully selected football tips to help you make informed betting decisions. Conservative markets, rigorous statistics, zero hype.
+              Verified mathematical match predictions, live worldwide soccer scores, and real-time public banter. Reliable odds, zero simulated data.
             </p>
 
             {/* CTAs */}

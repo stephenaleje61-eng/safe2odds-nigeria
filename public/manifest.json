@@ -1,0 +1,21 @@
+{
+  "name": "2 Sure Odd Football",
+  "short_name": "2SureOdd",
+  "description": "Verified football match predictions, real live scoreboards, and global chat room for punters.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#16A34A",
+  "icons": [
+    {
+      "src": "/src/assets/images/vip_club_crest_1791379729058.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/src/assets/images/vip_club_crest_1791379729058.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

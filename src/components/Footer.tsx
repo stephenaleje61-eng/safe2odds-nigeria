@@ -19,16 +19,16 @@ export const Footer: React.FC<FooterProps> = ({ settings, onSelectTab, onOpenAdm
           {/* Col 1 & 2: Brand & Mission */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#16A34A] to-[#15803D] flex items-center justify-center text-white shadow-md">
-                <ShieldCheck className="w-6 h-6 stroke-[2.2]" />
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#16A34A] to-red-600 flex items-center justify-center text-white shadow-md">
+                <span className="text-xl font-black">2</span>
               </div>
               <span className="text-xl font-extrabold tracking-tight text-white">
-                Safe<span className="text-[#16A34A]">2</span>Odds <span className="text-xs bg-green-950 text-green-400 border border-green-800 px-1.5 py-0.5 rounded">NG</span>
+                2 Sure Odd <span className="text-red-500">Football</span>
               </span>
             </div>
 
             <p className="text-xs sm:text-sm text-gray-400 max-w-sm leading-relaxed">
-              Nigeria's modern football tips platform. We specialize in disciplined, conservative markets like Over 1.5 Goals, Double Chance, and BTTS to help punters build smart 1.90 - 2.10 accumulator slips.
+              Professional football match predictions, real live scoreboards, and global chat room for punters. Disciplined mathematical modeling, zero fake games.
             </p>
 
             <div className="flex items-center gap-2.5 pt-1">
@@ -105,16 +105,16 @@ export const Footer: React.FC<FooterProps> = ({ settings, onSelectTab, onOpenAdm
             </ul>
           </div>
 
-          {/* Col 4: Resources */}
+          {/* Col 4: Community & Tools */}
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-green-400 mb-3">
-              Resources & VIP
+              Community & Chat
             </h4>
             <ul className="space-y-2 text-xs text-gray-400">
               <li>
-                <button onClick={() => onSelectTab('vip')} className="hover:text-white transition-colors flex items-center gap-1">
-                  <span>VIP Premium Tips</span>
-                  <span className="text-[9px] bg-amber-500 text-gray-950 font-black px-1 rounded">PRO</span>
+                <button onClick={() => onSelectTab('chat')} className="hover:text-white transition-colors flex items-center gap-1.5 font-bold text-gray-200">
+                  <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                  <span>Live Match Chat Room</span>
                 </button>
               </li>
               <li>

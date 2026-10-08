@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Flame, CheckSquare, Radio, Users, Sparkles } from 'lucide-react';
+import { Home, Flame, CheckSquare, Radio, Users, MessageSquare } from 'lucide-react';
 
 interface Props {
   currentTab: string;
@@ -10,10 +10,10 @@ export const MobileBottomNav: React.FC<Props> = ({ currentTab, onSelectTab }) =>
   const tabs = [
     { id: 'home', label: 'Home', icon: Home },
     { id: 'tips', label: "Tips", icon: Flame },
-    { id: 'results', label: 'Results', icon: CheckSquare },
+    { id: 'chat', label: 'Chat', icon: MessageSquare },
     { id: 'livescores', label: 'Live', icon: Radio },
-    { id: 'community', label: 'Community', icon: Users },
-    { id: 'vip', label: 'VIP', icon: Sparkles },
+    { id: 'results', label: 'Results', icon: CheckSquare },
+    { id: 'community', label: 'Fans', icon: Users },
   ];
 
   return (

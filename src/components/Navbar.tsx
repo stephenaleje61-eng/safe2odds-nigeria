@@ -47,11 +47,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   const navItems = [
     { id: 'home', label: 'Home' },
     { id: 'tips', label: "Today's Tips" },
-    { id: 'results', label: 'Results' },
+    { id: 'chat', label: 'Live Chat' },
     { id: 'livescores', label: 'Live Scores' },
-    { id: 'guide', label: 'Betting Guide' },
+    { id: 'results', label: 'Results' },
     { id: 'community', label: 'Community' },
-    { id: 'vip', label: 'VIP' },
+    { id: 'guide', label: 'Betting Guide' },
     { id: 'news', label: 'News' },
   ];
 
@@ -68,24 +68,22 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           
-          {/* ZONE 1: Brand Wordmark */}
+          {/* ZONE 1: Brand Wordmark: 2 Sure Odd Football */}
           <div className="flex items-center gap-3">
             <button 
               onClick={() => handleNavClick('home')}
               className="flex items-center gap-2.5 text-left focus:outline-hidden"
             >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#16A34A] to-[#15803D] flex items-center justify-center text-white shadow-md shadow-green-700/20 shrink-0">
-                <ShieldCheck className="w-6 h-6 stroke-[2.2]" />
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#16A34A] to-red-600 flex items-center justify-center text-white shadow-md shadow-green-700/20 shrink-0">
+                <span className="text-xl font-black">2</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-extrabold tracking-tight text-[#111827] leading-none flex items-center gap-1.5">
-                  Safe<span className="text-[#16A34A]">2</span>Odds
-                  <span className="text-[10px] font-bold bg-green-100 text-green-800 px-1.5 py-0.5 rounded tracking-wide uppercase">
-                    NG
-                  </span>
+                <span className="text-lg sm:text-xl font-extrabold tracking-tight text-[#111827] leading-none flex items-center gap-1.5">
+                  <span>2 Sure Odd</span>
+                  <span className="text-red-600">Football</span>
                 </span>
                 <span className="text-[11px] font-medium text-gray-500 mt-0.5 hidden sm:inline">
-                  Smart Tips. Better Decisions.
+                  Verified Real Matches & Community
                 </span>
               </div>
             </button>
@@ -101,14 +99,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onClick={() => handleNavClick(item.id)}
                   className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors whitespace-nowrap ${
                     isActive
-                      ? 'bg-green-50 text-green-700 border border-green-200/80 shadow-2xs'
+                      ? 'bg-green-50 text-green-700 border border-green-200/80 shadow-2xs font-bold'
                       : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
                   {item.label}
-                  {item.id === 'vip' && (
-                    <span className="ml-1 text-[9px] bg-amber-500 text-white font-bold px-1 py-0.2 rounded-xs">
-                      PRO
+                  {item.id === 'chat' && (
+                    <span className="ml-1.5 text-[9px] bg-red-600 text-white font-black px-1.5 py-0.2 rounded-full animate-pulse">
+                      LIVE
                     </span>
                   )}
                 </button>

@@ -14,7 +14,8 @@ import {
   UserRole,
   PredictionComment,
   LeaderboardTimeframe,
-  BettingTipBookingCodes
+  BettingTipBookingCodes,
+  ChatMessage
 } from '../types';
 
 const TOKEN_KEY = 'safe2odds_jwt_session';
@@ -69,10 +70,18 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
 
 export const ApiClient = {
   // --- AUTH ---
-  async register(email: string, password: string, username: string, displayName?: string) {
+  async register(
+    email: string, 
+    password: string, 
+    username: string, 
+    displayName?: string, 
+    country?: string, 
+    countryCode?: string, 
+    countryFlag?: string
+  ) {
     const res = await request<{ token: string; user: UserProfile }>('/api/auth/register', {
       method: 'POST',
-      body: JSON.stringify({ email, password, username, displayName }),
+      body: JSON.stringify({ email, password, username, displayName, country, countryCode, countryFlag }),
     });
     if (res.success && res.data) {
       setStoredAuthToken(res.data.token);
@@ -262,6 +271,27 @@ export const ApiClient = {
 
   async markAllNotificationsRead() {
     return request<{ message: string }>('/api/notifications/mark-all-read', { method: 'POST' });
+  },
+
+  // --- REAL-TIME PUBLIC CHAT ROOM ---
+  async getChatMessages(limit = 60, beforeId?: string) {
+    const params = new URLSearchParams();
+    if (limit) params.set('limit', limit.toString());
+    if (beforeId) params.set('beforeId', beforeId);
+    return request<{ messages: ChatMessage[]; total: number }>(`/api/chat/messages?${params}`);
+  },
+
+  async sendChatMessage(text: string, replyToId?: string) {
+    return request<ChatMessage>('/api/chat/messages', {
+      method: 'POST',
+      body: JSON.stringify({ text, replyToId }),
+    });
+  },
+
+  async likeChatMessage(messageId: string) {
+    return request<{ likes: number; isLiked: boolean }>(`/api/chat/messages/${messageId}/like`, {
+      method: 'POST',
+    });
   },
 
   // --- ADMIN MODERATION ---

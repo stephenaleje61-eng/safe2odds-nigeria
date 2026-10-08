@@ -42,10 +42,14 @@ apiRouter.post(
   rateLimit({ max: 5, windowMs: 60 * 1000, keyPrefix: 'auth_reg' }),
   async (req: Request, res: Response) => {
     try {
-      const { email, password, username, displayName } = req.body;
+      const { email, password, username, displayName, country, countryCode, countryFlag } = req.body;
 
       if (!email || !password || !username) {
         return sendError(res, 'VALIDATION_ERROR', 'Email, password, and username are required.');
+      }
+
+      if (!country || !country.trim()) {
+        return sendError(res, 'MISSING_COUNTRY', 'Please select your country before signing up.');
       }
 
       if (password.length < 8) {
@@ -98,7 +102,10 @@ apiRouter.post(
         displayName: (displayName && displayName.trim()) || cleanUsername,
         email: email.toLowerCase().trim(),
         avatar: '/src/assets/images/football_tactics_guide_1791379711012.jpg',
-        bio: 'Nigerian football fan on Safe2Odds.',
+        bio: `Football enthusiast from ${country.trim()}.`,
+        country: country.trim(),
+        countryCode: countryCode || 'NG',
+        countryFlag: countryFlag || '🌍',
         dateJoined: now,
         points: 0,
         totalPredictions: 0,
@@ -597,6 +604,62 @@ apiRouter.post('/notifications/mark-all-read', requireAuth, (req: AuthenticatedR
   db.markAllNotificationsAsRead(req.user!.userId);
   return sendSuccess(res, { message: 'All notifications marked as read.' });
 });
+
+// ============================================================================
+// 6B. REAL-TIME PUBLIC CHAT ROOM (/api/chat/*)
+// ============================================================================
+apiRouter.get('/chat/messages', (_req: Request, res: Response) => {
+  const limit = Math.min(100, Math.max(10, Number(_req.query.limit) || 60));
+  const beforeId = _req.query.beforeId as string | undefined;
+  const result = db.getChatMessages(limit, beforeId);
+  return sendSuccess(res, result);
+});
+
+apiRouter.post(
+  '/chat/messages',
+  requireAuth,
+  rateLimit({ max: 30, windowMs: 60 * 1000, keyPrefix: 'chat_msg' }),
+  (req: AuthenticatedRequest, res: Response) => {
+    const { text, replyToId } = req.body;
+    if (!text || !text.trim()) {
+      return sendError(res, 'VALIDATION_ERROR', 'Message text cannot be empty.');
+    }
+
+    const check = containsProfanityOrSpam(text);
+    if (check.isFlagged) {
+      return sendError(res, 'INAPPROPRIATE_CONTENT', check.reason || 'Message contains prohibited language.');
+    }
+
+    const profile = db.profiles.get(req.user!.userId);
+    const msg = db.postChatMessage(
+      {
+        id: req.user!.userId,
+        username: req.user!.username,
+        displayName: profile?.displayName || req.user!.username,
+        avatar: profile?.avatar,
+        country: profile?.country || 'Worldwide',
+        countryFlag: profile?.countryFlag || '🌍',
+        role: req.user!.role,
+      },
+      text.trim(),
+      replyToId
+    );
+
+    return sendSuccess(res, msg, 201);
+  }
+);
+
+apiRouter.post(
+  '/chat/messages/:id/like',
+  requireAuth,
+  (req: AuthenticatedRequest, res: Response) => {
+    const result = db.likeChatMessage(req.params.id, req.user!.userId);
+    if (!result) {
+      return sendError(res, 'MESSAGE_NOT_FOUND', 'Chat message not found.', 404);
+    }
+    return sendSuccess(res, result);
+  }
+);
 
 // ============================================================================
 // 7. ADMIN MODERATION & SERVER-SIDE AUTHORIZATION (/api/admin/*)

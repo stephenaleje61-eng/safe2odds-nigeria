@@ -19,7 +19,8 @@ import {
   CursorPaginatedResponse,
   PredictionComment,
   LeaderboardTimeframe,
-  BettingTipBookingCodes
+  BettingTipBookingCodes,
+  ChatMessage
 } from '../types';
 import { 
   INITIAL_TIPS, 
@@ -83,6 +84,7 @@ class ProductionDatabase {
   public newsArticles: NewsArticle[] = [...INITIAL_NEWS];
   public liveMatches: LiveMatch[] = [...INITIAL_LIVE_MATCHES];
   public settings: AppSettings = { ...INITIAL_SETTINGS };
+  public chatMessages: ChatMessage[] = [];
   public resetTokens = new Map<string, { userId: string; email: string; token: string; expiresAt: number }>();
 
   // Multi-timeframe Leaderboard cache
@@ -96,11 +98,11 @@ class ProductionDatabase {
     const salt = bcrypt.genSaltSync(10);
     const defaultPasswordHash = bcrypt.hashSync('Safe2Odds2026!', salt);
 
-    // 1. Seed Super Admin
+    // 1. Seed Super Admin (Primary Operator)
     const superAdminId = 'usr-super-admin-01';
     this.users.set(superAdminId, {
       id: superAdminId,
-      email: 'superadmin@safe2odds.ng',
+      email: 'sirrodstephen@gmail.com',
       passwordHash: defaultPasswordHash,
       role: 'super_admin',
       accountStatus: 'active',
@@ -111,20 +113,23 @@ class ProductionDatabase {
     this.profiles.set(superAdminId, {
       id: superAdminId,
       username: 'Safe2Odds_Chief',
-      displayName: 'Emeka Nwosu (Lead Architect)',
-      email: 'superadmin@safe2odds.ng',
+      displayName: 'Stephen Rod (Chief Admin)',
+      email: 'sirrodstephen@gmail.com',
       avatar: '/src/assets/images/vip_club_crest_1791379729058.jpg',
-      bio: 'Platform founder and chief quantitative sports analyst. Strictly disciplined mathematical betting models.',
+      bio: 'Platform founder & chief game analyst for 2 Sure Odd Football. Verified official predictions and management.',
+      country: 'Nigeria',
+      countryCode: 'NG',
+      countryFlag: '🇳🇬',
       dateJoined: '2026-01-01T00:00:00.000Z',
-      points: 450,
-      totalPredictions: 48,
-      totalWins: 41,
-      totalLosses: 7,
-      winRate: 85.42,
+      points: 850,
+      totalPredictions: 64,
+      totalWins: 58,
+      totalLosses: 6,
+      winRate: 90.62,
       lastActive: new Date().toISOString(),
       accountStatus: 'active',
       role: 'super_admin',
-      isVip: true,
+      isVip: false,
       savedTipIds: [],
     });
 
@@ -457,11 +462,79 @@ class ProductionDatabase {
       };
     });
 
-    // Populate badges and verified state on all profiles
+    // Populate badges, country and verified state on all profiles
     for (const profile of this.profiles.values()) {
       profile.emailVerified = true;
+      profile.country = profile.country || 'Nigeria';
+      profile.countryCode = profile.countryCode || 'NG';
+      profile.countryFlag = profile.countryFlag || '🇳🇬';
       profile.badges = computeUserBadges(profile);
     }
+
+    // Seed Real-Time Live Chat Messages
+    this.chatMessages = [
+      {
+        id: 'msg-1',
+        senderId: superAdminId,
+        senderUsername: 'Safe2Odds_Chief',
+        senderDisplayName: 'Emeka Nwosu (Lead Architect)',
+        senderAvatar: '/src/assets/images/vip_club_crest_1791379729058.jpg',
+        senderCountry: 'Nigeria',
+        senderCountryFlag: '🇳🇬',
+        senderRole: 'super_admin',
+        text: 'Welcome to 2 Sure Odd Football! ⚽ Live chat is officially open for all worldwide punters. Keep discussions respectful, share genuine insights, and let\'s beat the bookmakers!',
+        likes: 18,
+        likedBy: [],
+        createdAt: new Date(Date.now() - 3600000 * 4).toISOString(),
+      },
+      {
+        id: 'msg-2',
+        senderId: 'usr-punter-01',
+        senderUsername: 'NaijaBetKing',
+        senderDisplayName: 'Chukwudi Obi',
+        senderAvatar: '/src/assets/images/football_news_action_1791379720643.jpg',
+        senderCountry: 'Nigeria',
+        senderCountryFlag: '🇳🇬',
+        senderRole: 'user',
+        text: 'Who else loaded the Arsenal vs Man City Over 1.5 Goals game? Looks like the safest lock for today\'s 2-odds slip!',
+        likes: 12,
+        likedBy: [],
+        createdAt: new Date(Date.now() - 3600000 * 2).toISOString(),
+      },
+      {
+        id: 'msg-3',
+        senderId: 'usr-comm-02',
+        senderUsername: 'LagosTactician',
+        senderDisplayName: 'Babatunde F.',
+        senderAvatar: '/src/assets/images/football_tactics_guide_1791379711012.jpg',
+        senderCountry: 'Nigeria',
+        senderCountryFlag: '🇳🇬',
+        senderRole: 'user',
+        replyTo: {
+          id: 'msg-2',
+          senderUsername: 'NaijaBetKing',
+          text: 'Who else loaded the Arsenal vs Man City Over 1.5 Goals game? Looks like the safest lock for today\'s 2-odds slip!',
+        },
+        text: 'Locked it on SportyBet and Bet9ja with Madrid double chance. Total odds around 1.96! Let\'s cash out together! 🚀',
+        likes: 8,
+        likedBy: [],
+        createdAt: new Date(Date.now() - 3600000 * 1).toISOString(),
+      },
+      {
+        id: 'msg-4',
+        senderId: 'usr-mod-01',
+        senderUsername: 'NaijaMod_Official',
+        senderDisplayName: 'Community Moderator',
+        senderAvatar: '/src/assets/images/football_tactics_guide_1791379711012.jpg',
+        senderCountry: 'Nigeria',
+        senderCountryFlag: '🇳🇬',
+        senderRole: 'moderator',
+        text: 'Reminder: Only post verified analytical arguments. No fixed match scam spam allowed. Enjoy the matches guys! 🛡️',
+        likes: 15,
+        likedBy: [],
+        createdAt: new Date(Date.now() - 3600000 * 0.5).toISOString(),
+      }
+    ];
   }
 
   // --------------------------------------------------------------------------
@@ -1100,6 +1173,105 @@ class ProductionDatabase {
         n.read = true;
       }
     });
+  }
+
+  // --------------------------------------------------------------------------
+  // PUBLIC CHAT ROOM MANAGEMENT
+  // --------------------------------------------------------------------------
+  public getChatMessages(limit = 60, beforeId?: string): { messages: ChatMessage[]; total: number } {
+    let sorted = [...this.chatMessages].sort(
+      (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+    );
+
+    if (beforeId) {
+      const idx = sorted.findIndex(m => m.id === beforeId);
+      if (idx > 0) {
+        sorted = sorted.slice(0, idx);
+      }
+    }
+
+    const sliced = sorted.slice(Math.max(0, sorted.length - limit));
+    return {
+      messages: sliced,
+      total: this.chatMessages.length,
+    };
+  }
+
+  public postChatMessage(
+    user: { id: string; username: string; displayName?: string; avatar?: string; country?: string; countryFlag?: string; role?: UserRole },
+    text: string,
+    replyToId?: string
+  ): ChatMessage {
+    let replyToObj: ChatMessage['replyTo'] = undefined;
+    if (replyToId) {
+      const target = this.chatMessages.find(m => m.id === replyToId);
+      if (target) {
+        replyToObj = {
+          id: target.id,
+          senderUsername: target.senderUsername,
+          text: target.text.slice(0, 100),
+        };
+
+        // Notify user if replied to by someone else
+        if (target.senderId !== user.id) {
+          this.notifications.unshift({
+            id: `notif-${Date.now()}-${Math.random()}`,
+            userId: target.senderId,
+            title: 'New Reply in Public Chat',
+            message: `@${user.username} replied to your message: "${text.slice(0, 50)}..."`,
+            type: 'SYSTEM',
+            read: false,
+            createdAt: new Date().toISOString(),
+          });
+        }
+      }
+    }
+
+    const msg: ChatMessage = {
+      id: `msg-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
+      senderId: user.id,
+      senderUsername: user.username,
+      senderDisplayName: user.displayName || user.username,
+      senderAvatar: user.avatar || '/src/assets/images/football_tactics_guide_1791379711012.jpg',
+      senderCountry: user.country || 'Worldwide',
+      senderCountryFlag: user.countryFlag || '🌍',
+      senderRole: user.role || 'user',
+      text: text.slice(0, 800),
+      replyTo: replyToObj,
+      likes: 0,
+      likedBy: [],
+      createdAt: new Date().toISOString(),
+    };
+
+    this.chatMessages.push(msg);
+
+    // Keep memory bounded to last 2000 messages
+    if (this.chatMessages.length > 2000) {
+      this.chatMessages = this.chatMessages.slice(this.chatMessages.length - 2000);
+    }
+
+    return msg;
+  }
+
+  public likeChatMessage(messageId: string, userId: string): { likes: number; isLiked: boolean } | null {
+    const msg = this.chatMessages.find(m => m.id === messageId);
+    if (!msg) return null;
+
+    msg.likedBy = msg.likedBy || [];
+    const index = msg.likedBy.indexOf(userId);
+    let isLiked = false;
+
+    if (index > -1) {
+      msg.likedBy.splice(index, 1);
+      msg.likes = Math.max(0, msg.likes - 1);
+      isLiked = false;
+    } else {
+      msg.likedBy.push(userId);
+      msg.likes += 1;
+      isLiked = true;
+    }
+
+    return { likes: msg.likes, isLiked };
   }
 
   // --------------------------------------------------------------------------

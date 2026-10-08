@@ -206,9 +206,18 @@ export const UserProfileModal: React.FC<UserProfileModalProps> = ({
                         </span>
                       )}
                     </div>
-                    <span className="text-xs text-gray-400 block mt-0.5">
-                      @{profile.username} · Joined {new Date(profile.dateJoined).toLocaleDateString([], { month: 'short', year: 'numeric' })}
-                    </span>
+                    <div className="flex items-center gap-2 text-xs text-gray-400 mt-0.5 flex-wrap">
+                      <span>@{profile.username}</span>
+                      <span>·</span>
+                      {profile.country && (
+                        <span className="inline-flex items-center gap-1 font-semibold text-gray-200 bg-white/10 px-2 py-0.5 rounded-md">
+                          <span>{profile.countryFlag || '🌍'}</span>
+                          <span>{profile.country}</span>
+                        </span>
+                      )}
+                      <span>·</span>
+                      <span>Joined {new Date(profile.dateJoined).toLocaleDateString([], { month: 'short', year: 'numeric' })}</span>
+                    </div>
                   </div>
                 </div>
 

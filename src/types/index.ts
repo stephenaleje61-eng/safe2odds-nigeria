@@ -40,6 +40,26 @@ export interface BettingTip {
 export type UserRole = 'user' | 'moderator' | 'admin' | 'super_admin';
 export type AccountStatus = 'active' | 'suspended' | 'banned';
 
+export interface ChatMessage {
+  id: string;
+  senderId: string;
+  senderUsername: string;
+  senderDisplayName: string;
+  senderAvatar: string;
+  senderCountry?: string;
+  senderCountryFlag?: string;
+  senderRole?: UserRole;
+  text: string;
+  replyTo?: {
+    id: string;
+    senderUsername: string;
+    text: string;
+  };
+  likes: number;
+  likedBy?: string[];
+  createdAt: string;
+}
+
 export interface UserProfile {
   id: string;
   username: string;
@@ -47,6 +67,9 @@ export interface UserProfile {
   email: string;
   avatar: string;
   bio: string;
+  country: string;
+  countryCode: string;
+  countryFlag: string;
   dateJoined: string;
   points: number;
   totalPredictions: number;
@@ -56,7 +79,7 @@ export interface UserProfile {
   lastActive: string;
   accountStatus: AccountStatus;
   role: UserRole;
-  isVip: boolean;
+  isVip?: boolean;
   emailVerified?: boolean;
   badges?: string[];
   savedTipIds: string[];

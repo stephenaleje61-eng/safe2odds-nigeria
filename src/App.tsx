@@ -22,12 +22,14 @@ import { FansPredictionZone } from './components/FansPredictionZone';
 import { LeaderboardSection } from './components/LeaderboardSection';
 import { LiveScoresSection } from './components/LiveScoresSection';
 import { BettingGuideSection } from './components/BettingGuideSection';
-import { VipSection } from './components/VipSection';
 import { NewsSection } from './components/NewsSection';
 import { AdminDashboard } from './components/AdminDashboard';
 import { UserAccountModal } from './components/UserAccountModal';
 import { UserProfileModal } from './components/UserProfileModal';
 import { SlipAccumulatorBar } from './components/SlipAccumulatorBar';
+import { AdminOfficialGamesSection } from './components/AdminOfficialGamesSection';
+import { LiveChatRoom } from './components/LiveChatRoom';
+import { SportsbookSpaces } from './components/SportsbookSpaces';
 import { AdBanner } from './components/AdBanner';
 import { ResponsibleGamblingBanner } from './components/ResponsibleGamblingBanner';
 import { Footer } from './components/Footer';
@@ -478,8 +480,49 @@ export default function App() {
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-12">
               
+              {/* ADMIN OFFICIAL GAMES & PREDICTIONS SECTION (PROMINENT AT TOP) */}
+              <AdminOfficialGamesSection
+                tips={tips}
+                currentUser={currentUser}
+                onOpenCreateTipModal={() => setCurrentTab('admin')}
+                onCopyTip={handleCopyTip}
+                onShareTip={handleShareTip}
+                onToggleBookmark={handleToggleBookmark}
+                onToggleSlip={handleToggleSlip}
+                slipTips={slipTips}
+              />
+
               {/* In-feed Ad Banner */}
               <AdBanner location="in-feed" settings={settings} />
+
+              {/* VERIFIED SPORTSBOOK PORTALS (SPORTYBET, BET9JA, MSPORT, FOOTBALL.COM) */}
+              <SportsbookSpaces />
+
+              {/* REAL-TIME PUBLIC CHAT ROOM EMBED */}
+              <section className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-black text-gray-900">
+                      Live Football Public Chat Room
+                    </h3>
+                    <p className="text-xs text-gray-500">
+                      Real-time banter and match analysis from worldwide punters. Instant replies & alerts.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setCurrentTab('chat')}
+                    className="text-xs font-bold text-green-700 hover:text-green-800 flex items-center gap-1"
+                  >
+                    <span>Full Screen Chat</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+                <LiveChatRoom
+                  currentUser={currentUser}
+                  onOpenLogin={() => setAuthModalOpen(true)}
+                  onOpenProfile={handleOpenProfile}
+                />
+              </section>
 
               {/* TODAY'S TIPS FEED */}
               <section id="todays-tips-feed" className="space-y-5">
@@ -506,10 +549,10 @@ export default function App() {
                       Results Tracker ({calculatedStats.winRate}% Win Rate)
                     </button>
                     <button
-                      onClick={() => setCurrentTab('vip')}
-                      className="text-xs font-extrabold text-amber-900 bg-amber-400 hover:bg-amber-500 px-3 py-1.5 rounded-xl shadow-2xs transition-colors flex items-center gap-1"
+                      onClick={() => setCurrentTab('chat')}
+                      className="text-xs font-extrabold text-white bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-xl shadow-2xs transition-colors flex items-center gap-1.5"
                     >
-                      <Sparkles className="w-3.5 h-3.5" /> VIP Tips
+                      <MessageCircle className="w-3.5 h-3.5" /> Live Chat Room
                     </button>
                   </div>
                 </div>
@@ -728,11 +771,11 @@ export default function App() {
 
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => setCurrentTab('vip')}
-                  className="px-4 py-2 bg-amber-400 hover:bg-amber-500 text-gray-950 font-bold text-xs rounded-xl shadow-xs transition-colors flex items-center gap-1.5"
+                  onClick={() => setCurrentTab('chat')}
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl shadow-xs transition-colors flex items-center gap-1.5"
                 >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>View VIP Banker Slips</span>
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  <span>Join Live Match Chat</span>
                 </button>
               </div>
             </div>
@@ -836,21 +879,13 @@ export default function App() {
           </div>
         )}
 
-        {/* TAB 7: VIP PAGE */}
-        {currentTab === 'vip' && (
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-            <VipSection
-              vipTips={vipTips}
-              settings={settings}
-              userSession={currentUser}
-              onCopyTip={handleCopyTip}
-              onShareTip={handleShareTip}
-              onUpgradeToVip={() => {
-                if (currentUser) {
-                  setCurrentUser({ ...currentUser, isVip: true });
-                }
-                showToast('👑 VIP membership activated on your profile!');
-              }}
+        {/* TAB 7: LIVE PUBLIC CHAT ROOM */}
+        {currentTab === 'chat' && (
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+            <LiveChatRoom
+              currentUser={currentUser}
+              onOpenLogin={() => setAuthModalOpen(true)}
+              onOpenProfile={handleOpenProfile}
             />
           </div>
         )}
