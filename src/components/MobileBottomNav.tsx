@@ -17,7 +17,7 @@ export const MobileBottomNav: React.FC<Props> = ({ currentTab, onSelectTab }) =>
   ];
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200 px-2 py-1.5 shadow-lg">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0E121A]/95 backdrop-blur-md border-t border-red-950/50 px-2 py-1.5 shadow-2xl">
       <div className="grid grid-cols-6 items-center max-w-md mx-auto">
         {tabs.map(tab => {
           const Icon = tab.icon;
@@ -30,10 +30,10 @@ export const MobileBottomNav: React.FC<Props> = ({ currentTab, onSelectTab }) =>
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               className={`flex flex-col items-center justify-center py-1 rounded-xl transition-colors min-h-[44px] ${
-                isActive ? 'text-green-600 font-bold' : 'text-gray-500 hover:text-gray-800'
+                isActive ? 'text-red-500 font-black' : 'text-gray-400 hover:text-gray-200'
               }`}
             >
-              <Icon className={`w-5 h-5 ${isActive ? 'stroke-[2.4]' : 'stroke-[1.8]'}`} />
+              <Icon className={`w-5 h-5 ${isActive ? 'stroke-[2.5] text-red-500' : 'stroke-[1.8]'}`} />
               <span className="text-[10px] tracking-tight mt-0.5 whitespace-nowrap">
                 {tab.label}
               </span>

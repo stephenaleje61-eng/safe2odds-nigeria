@@ -29,6 +29,36 @@ async function startServer() {
   // Mount production API routes
   app.use('/api', apiRouter);
 
+  // Catch-all for undefined /api routes returning standard JSON
+  app.use('/api', (_req, res) => {
+    res.status(404).json({
+      success: false,
+      data: null,
+      error: {
+        code: 'NOT_FOUND',
+        message: 'The requested API endpoint was not found.',
+      },
+    });
+  });
+
+  // Global error handler for API errors (including body-parser JSON SyntaxError)
+  app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    if (req.path.startsWith('/api')) {
+      const statusCode = err.status || err.statusCode || 400;
+      return res.status(statusCode).json({
+        success: false,
+        data: null,
+        error: {
+          code: err.type === 'entity.parse.failed' ? 'INVALID_JSON_BODY' : 'REQUEST_ERROR',
+          message: err.type === 'entity.parse.failed' 
+            ? 'Malformed request body: Invalid JSON payload provided.' 
+            : err.message || 'An error occurred while processing the request.',
+        },
+      });
+    }
+    next(err);
+  });
+
   // Health check endpoint
   app.get('/health', (_req, res) => {
     res.json({ status: 'ok', service: 'safe2odds-nigeria-core', timestamp: new Date().toISOString() });

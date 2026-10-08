@@ -437,7 +437,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F3F4F6] text-[#111827]">
+    <div className="min-h-screen flex flex-col bg-[#0B0E14] text-[#F3F4F6]">
       
       {/* Top Affiliate Ad Banner */}
       <AdBanner location="top" settings={settings} />
@@ -490,6 +490,11 @@ export default function App() {
                 onToggleBookmark={handleToggleBookmark}
                 onToggleSlip={handleToggleSlip}
                 slipTips={slipTips}
+                onTipCreatedOrUpdated={async () => {
+                  const refreshed = await ApiClient.getOfficialTips();
+                  if (refreshed.success && refreshed.data) setTips(refreshed.data);
+                  showToast('Official game published live! Broadcasted to all users.', 'success');
+                }}
               />
 
               {/* In-feed Ad Banner */}
@@ -502,16 +507,19 @@ export default function App() {
               <section className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-lg sm:text-xl font-black text-gray-900">
-                      Live Football Public Chat Room
+                    <h3 className="text-lg sm:text-xl font-black text-white flex items-center gap-2">
+                      <span>Live Football Public Chat Room</span>
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-red-600 text-white animate-pulse">
+                        LIVE
+                      </span>
                     </h3>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-400">
                       Real-time banter and match analysis from worldwide punters. Instant replies & alerts.
                     </p>
                   </div>
                   <button
                     onClick={() => setCurrentTab('chat')}
-                    className="text-xs font-bold text-green-700 hover:text-green-800 flex items-center gap-1"
+                    className="text-xs font-bold text-red-400 hover:text-red-300 flex items-center gap-1"
                   >
                     <span>Full Screen Chat</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -526,17 +534,17 @@ export default function App() {
 
               {/* TODAY'S TIPS FEED */}
               <section id="todays-tips-feed" className="space-y-5">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-gray-200">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-white/10">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="p-1 bg-green-100 text-green-700 rounded-lg">
+                      <span className="p-1.5 bg-red-600/20 text-red-400 rounded-lg border border-red-500/30">
                         <Flame className="w-5 h-5 fill-current" />
                       </span>
-                      <h2 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">
+                      <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
                         Today's Free Football Tips
                       </h2>
                     </div>
-                    <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
+                    <p className="text-xs sm:text-sm text-gray-400 mt-0.5">
                       Target: {settings.targetOdds} Odds · Conservative selections backed by statistical form and head-to-head analysis.
                     </p>
                   </div>
@@ -544,13 +552,13 @@ export default function App() {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => setCurrentTab('results')}
-                      className="text-xs font-bold text-gray-600 hover:text-green-700 bg-white border border-gray-200 px-3 py-1.5 rounded-xl shadow-2xs transition-colors"
+                      className="text-xs font-bold text-gray-300 hover:text-white bg-white/10 border border-white/15 px-3 py-1.5 rounded-xl transition-colors"
                     >
                       Results Tracker ({calculatedStats.winRate}% Win Rate)
                     </button>
                     <button
                       onClick={() => setCurrentTab('chat')}
-                      className="text-xs font-extrabold text-white bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-xl shadow-2xs transition-colors flex items-center gap-1.5"
+                      className="text-xs font-extrabold text-white bg-red-600 hover:bg-red-500 px-3 py-1.5 rounded-xl shadow-md shadow-red-700/30 transition-colors flex items-center gap-1.5"
                     >
                       <MessageCircle className="w-3.5 h-3.5" /> Live Chat Room
                     </button>

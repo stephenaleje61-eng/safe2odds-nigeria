@@ -110,7 +110,7 @@ export const UserAccountModal: React.FC<UserAccountModalProps> = ({
 
   const handleGoogleAuth = async () => {
     setLoading(true);
-    const res = await ApiClient.loginWithGoogle(email.trim() || 'google.user@safe2odds.ng', displayName || 'Naija Google Punter');
+    const res = await ApiClient.loginWithGoogle(email.trim() || 'google.user@safe2odds.ng', displayName || 'Verified Google Punter');
     setLoading(false);
     if (res.success && res.data) {
       onAuthSuccess(res.data.user);
@@ -127,32 +127,32 @@ export const UserAccountModal: React.FC<UserAccountModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl animate-in zoom-in-95 duration-150 max-h-[94vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-[#141923] border border-red-900/40 rounded-3xl max-w-md w-full p-6 sm:p-7 shadow-2xl animate-in zoom-in-95 duration-150 max-h-[94vh] overflow-y-auto text-white">
         
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-gray-100 mb-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-green-100 text-green-700 flex items-center justify-center">
+        <div className="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-red-600/20 text-red-400 border border-red-500/30 flex items-center justify-center">
               <User className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="font-extrabold text-base text-gray-900">
+              <h3 className="font-black text-base text-white">
                 {currentUser 
                   ? 'Account Overview' 
                   : mode === 'login' 
-                  ? 'Sign In to Safe2Odds' 
+                  ? 'Sign In to 2 Sure Odd' 
                   : mode === 'register' 
                   ? 'Create Free Account' 
                   : 'Reset Password'}
               </h3>
-              <span className="text-[10px] text-gray-500">
-                Production Authentication Engine
+              <span className="text-[10px] text-gray-400">
+                Production Worldwide Authentication
               </span>
             </div>
           </div>
 
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 p-1">
+          <button onClick={onClose} className="text-gray-400 hover:text-white p-1 rounded-lg">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -160,15 +160,16 @@ export const UserAccountModal: React.FC<UserAccountModalProps> = ({
         {/* Logged in state */}
         {currentUser ? (
           <div className="space-y-4">
-            <div className="bg-gradient-to-br from-green-50 to-gray-50 p-4 rounded-2xl border border-green-200">
+            <div className="bg-gradient-to-br from-[#1C2331] to-[#121620] p-4 rounded-2xl border border-white/10">
               <div className="flex items-center justify-between mb-2">
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-gray-500 block">Active Account</span>
-                  <span className="text-base font-extrabold text-gray-900">{currentUser.displayName || currentUser.username}</span>
-                  <span className="text-xs text-gray-500 block">@{currentUser.username} · {currentUser.email}</span>
+                  <span className="text-[10px] uppercase font-bold text-gray-400 block">Active Account</span>
+                  <span className="text-base font-black text-white">{currentUser.displayName || currentUser.username}</span>
+                  <span className="text-xs text-gray-400 block">@{currentUser.username} · {currentUser.email}</span>
                 </div>
                 {currentUser.role !== 'user' && (
-                  <span className="bg-purple-100 text-purple-800 text-[10px] font-black px-2 py-0.5 rounded-full uppercase">
+                  <span className="bg-red-950 text-red-400 text-[10px] font-black px-2 py-0.5 rounded-full uppercase border border-red-700/60 flex items-center gap-1">
+                    <Crown className="w-3 h-3 text-amber-400" />
                     {currentUser.role}
                   </span>
                 )}
@@ -177,31 +178,31 @@ export const UserAccountModal: React.FC<UserAccountModalProps> = ({
               {/* Email Verification Status & Badges */}
               <div className="flex flex-wrap items-center gap-2 pt-2 pb-1">
                 {currentUser.emailVerified ? (
-                  <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2 py-0.5 rounded-md">
-                    <CheckCircle2 className="w-3 h-3 text-emerald-600" /> Email Verified
+                  <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-500/50 px-2 py-0.5 rounded-md">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-400" /> Email Verified
                   </span>
                 ) : (
                   <button
                     type="button"
                     onClick={handleVerifyEmail}
                     disabled={verifyingEmail}
-                    className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 px-2.5 py-0.5 rounded-md transition-colors"
+                    className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-300 bg-amber-950/80 hover:bg-amber-900 border border-amber-600/50 px-2.5 py-0.5 rounded-md transition-colors"
                   >
-                    <ShieldAlert className="w-3 h-3 text-amber-600" />
+                    <ShieldAlert className="w-3 h-3 text-amber-400" />
                     <span>{verifyingEmail ? 'Verifying...' : 'Verify Email (1-Click)'}</span>
                   </button>
                 )}
 
                 {currentUser.badges && currentUser.badges.map(b => (
-                  <span key={b} className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-white border border-gray-200 text-gray-800 shadow-2xs">
+                  <span key={b} className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-white/10 border border-white/15 text-gray-200 shadow-2xs">
                     {b}
                   </span>
                 ))}
               </div>
 
-              <div className="mt-3 pt-3 border-t border-gray-200/80 flex items-center justify-between text-xs">
-                <span className="text-gray-600">Points Balance:</span>
-                <span className="font-black text-green-700 text-sm tabular-nums">
+              <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-between text-xs">
+                <span className="text-gray-400">Points Balance:</span>
+                <span className="font-black text-red-400 text-sm tabular-nums">
                   {currentUser.points} pts
                 </span>
               </div>
@@ -209,20 +210,20 @@ export const UserAccountModal: React.FC<UserAccountModalProps> = ({
 
             {/* Saved Tips Bookmark List */}
             <div>
-              <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                <Bookmark className="w-3.5 h-3.5 text-green-600" /> Bookmarked Tips ({savedTips.length})
+              <h4 className="text-xs font-bold text-gray-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <Bookmark className="w-3.5 h-3.5 text-red-400" /> Bookmarked Tips ({savedTips.length})
               </h4>
               {savedTips.length === 0 ? (
-                <p className="text-xs text-gray-400 bg-gray-50 p-3 rounded-xl text-center">
+                <p className="text-xs text-gray-400 bg-black/40 p-3 rounded-xl text-center border border-white/5">
                   No bookmarks yet. Click the bookmark icon on any tip card to save it.
                 </p>
               ) : (
                 <div className="space-y-2 max-h-36 overflow-y-auto">
                   {savedTips.map(tip => (
-                    <div key={tip.id} className="p-2.5 bg-gray-50 rounded-xl text-xs flex items-center justify-between border border-gray-100">
+                    <div key={tip.id} className="p-2.5 bg-black/40 rounded-xl text-xs flex items-center justify-between border border-white/10">
                       <div>
-                        <span className="font-bold text-gray-900 block">{tip.homeTeam} vs {tip.awayTeam}</span>
-                        <span className="text-green-700">{tip.predictionDetail || tip.prediction} (@{tip.odds.toFixed(2)})</span>
+                        <span className="font-bold text-white block">{tip.homeTeam} vs {tip.awayTeam}</span>
+                        <span className="text-red-400">{tip.predictionDetail || tip.prediction} (@{tip.odds.toFixed(2)})</span>
                       </div>
                       <span className="text-[10px] text-gray-400">{tip.time}</span>
                     </div>
@@ -236,7 +237,7 @@ export const UserAccountModal: React.FC<UserAccountModalProps> = ({
                 onLogout();
                 onClose();
               }}
-              className="w-full flex items-center justify-center gap-2 p-2.5 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 text-xs font-semibold transition-colors"
+              className="w-full flex items-center justify-center gap-2 p-2.5 rounded-xl border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 text-xs font-bold transition-colors"
             >
               <LogOut className="w-3.5 h-3.5" /> Sign Out
             </button>
@@ -245,11 +246,11 @@ export const UserAccountModal: React.FC<UserAccountModalProps> = ({
           /* Authentication Forms */
           <div>
             {/* Mode Tabs */}
-            <div className="flex border-b border-gray-100 mb-4 text-xs font-bold">
+            <div className="flex border-b border-white/10 mb-4 text-xs font-bold">
               <button
                 onClick={() => { setMode('login'); setErrorMsg(''); setSuccessInfo(''); }}
                 className={`flex-1 py-2 text-center border-b-2 transition-colors ${
-                  mode === 'login' ? 'border-green-600 text-green-700' : 'border-transparent text-gray-400'
+                  mode === 'login' ? 'border-red-500 text-red-400' : 'border-transparent text-gray-400 hover:text-gray-200'
                 }`}
               >
                 Sign In
@@ -257,7 +258,7 @@ export const UserAccountModal: React.FC<UserAccountModalProps> = ({
               <button
                 onClick={() => { setMode('register'); setErrorMsg(''); setSuccessInfo(''); }}
                 className={`flex-1 py-2 text-center border-b-2 transition-colors ${
-                  mode === 'register' ? 'border-green-600 text-green-700' : 'border-transparent text-gray-400'
+                  mode === 'register' ? 'border-red-500 text-red-400' : 'border-transparent text-gray-400 hover:text-gray-200'
                 }`}
               >
                 Register
@@ -265,15 +266,15 @@ export const UserAccountModal: React.FC<UserAccountModalProps> = ({
             </div>
 
             {errorMsg && (
-              <div className="mb-3 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
-                <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0" />
+              <div className="mb-3 p-3 rounded-xl bg-red-950/80 border border-red-600/60 text-red-200 text-xs flex items-center gap-2">
+                <ShieldAlert className="w-4 h-4 text-red-400 shrink-0" />
                 <span>{errorMsg}</span>
               </div>
             )}
 
             {successInfo && (
-              <div className="mb-3 p-3 rounded-xl bg-green-50 border border-green-200 text-green-800 text-xs flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" />
+              <div className="mb-3 p-3 rounded-xl bg-emerald-950/80 border border-emerald-600/60 text-emerald-200 text-xs flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
                 <span>{successInfo}</span>
               </div>
             )}
@@ -283,17 +284,17 @@ export const UserAccountModal: React.FC<UserAccountModalProps> = ({
                 <>
                   {/* Mandatory Country Selection Before Signing Up */}
                   <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1 flex items-center justify-between">
+                    <label className="block text-xs font-bold text-gray-300 mb-1 flex items-center justify-between">
                       <span className="flex items-center gap-1.5">
-                        <Globe className="w-3.5 h-3.5 text-green-600" />
+                        <Globe className="w-3.5 h-3.5 text-red-400" />
                         <span>Select Your Country *</span>
                       </span>
-                      <span className="text-[10px] text-gray-500 font-normal">Worldwide Support</span>
+                      <span className="text-[10px] text-gray-400 font-normal">Worldwide Support</span>
                     </label>
                     <select
                       value={selectedCountryCode}
                       onChange={e => setSelectedCountryCode(e.target.value)}
-                      className="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-xs font-semibold text-gray-900 focus:outline-hidden focus:border-green-600"
+                      className="w-full bg-[#0A0D14] border border-white/20 rounded-xl px-3 py-2 text-xs font-semibold text-white focus:outline-none focus:border-red-500"
                     >
                       {WORLD_COUNTRIES.map(c => (
                         <option key={c.code} value={c.code}>
@@ -304,24 +305,24 @@ export const UserAccountModal: React.FC<UserAccountModalProps> = ({
                   </div>
 
                   <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">Unique Username *</label>
+                    <label className="block text-xs font-bold text-gray-300 mb-1">Unique Username *</label>
                     <input
                       type="text"
                       required
                       placeholder="e.g. VictorOsimhenFan"
                       value={username}
                       onChange={e => setUsername(e.target.value)}
-                      className="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-xs text-gray-900 focus:outline-hidden focus:border-green-600"
+                      className="w-full bg-[#0A0D14] border border-white/20 rounded-xl px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-red-500"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">Display Name</label>
+                    <label className="block text-xs font-bold text-gray-300 mb-1">Display Name</label>
                     <input
                       type="text"
                       placeholder="e.g. Victor O."
                       value={displayName}
                       onChange={e => setDisplayName(e.target.value)}
-                      className="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-xs text-gray-900 focus:outline-hidden focus:border-green-600"
+                      className="w-full bg-[#0A0D14] border border-white/20 rounded-xl px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-red-500"
                     />
                   </div>
                 </>
@@ -331,44 +332,44 @@ export const UserAccountModal: React.FC<UserAccountModalProps> = ({
                 <>
                   {resetStep === 1 ? (
                     <div>
-                      <p className="text-xs text-gray-600 mb-3 leading-relaxed">
-                        Enter your registered Safe2Odds email address. We will verify your account and provide a password reset authorization code.
+                      <p className="text-xs text-gray-300 mb-3 leading-relaxed">
+                        Enter your registered email address. We will verify your account and provide a password reset authorization code.
                       </p>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">Email Address *</label>
+                      <label className="block text-xs font-bold text-gray-300 mb-1">Email Address *</label>
                       <input
                         type="email"
                         required
                         placeholder="you@example.com"
                         value={email}
                         onChange={e => setEmail(e.target.value)}
-                        className="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-xs text-gray-900 focus:outline-hidden focus:border-green-600"
+                        className="w-full bg-[#0A0D14] border border-white/20 rounded-xl px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-red-500"
                       />
                     </div>
                   ) : (
                     <div className="space-y-3">
-                      <div className="bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl text-xs text-emerald-800">
+                      <div className="bg-emerald-950/80 border border-emerald-700/60 p-2.5 rounded-xl text-xs text-emerald-200">
                         Authorization code received. Enter your code and chosen new password below.
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-gray-700 mb-1">Reset Authorization Code *</label>
+                        <label className="block text-xs font-bold text-gray-300 mb-1">Reset Authorization Code *</label>
                         <input
                           type="text"
                           required
                           placeholder="e.g. RESET-481920"
                           value={resetToken}
                           onChange={e => setResetToken(e.target.value)}
-                          className="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-xs font-mono font-bold text-gray-900 focus:outline-hidden focus:border-green-600"
+                          className="w-full bg-[#0A0D14] border border-white/20 rounded-xl px-3 py-2 text-xs font-mono font-bold text-white focus:outline-none focus:border-red-500"
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-gray-700 mb-1">New Password (min 8 chars) *</label>
+                        <label className="block text-xs font-bold text-gray-300 mb-1">New Password (min 8 chars) *</label>
                         <input
                           type="password"
                           required
                           placeholder="••••••••"
                           value={newPassword}
                           onChange={e => setNewPassword(e.target.value)}
-                          className="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-xs text-gray-900 focus:outline-hidden focus:border-green-600"
+                          className="w-full bg-[#0A0D14] border border-white/20 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-red-500"
                         />
                       </div>
                     </div>
@@ -378,14 +379,14 @@ export const UserAccountModal: React.FC<UserAccountModalProps> = ({
                     <button
                       type="button"
                       onClick={() => { setMode('login'); setResetStep(1); }}
-                      className="px-3 py-2.5 rounded-xl border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold text-xs"
+                      className="px-3 py-2.5 rounded-xl border border-white/20 hover:bg-white/10 text-gray-300 font-bold text-xs"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
                       disabled={loading}
-                      className="flex-1 py-2.5 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white font-bold text-xs shadow-xs transition-colors"
+                      className="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold text-xs shadow-md shadow-red-700/30 transition-colors"
                     >
                       {loading ? 'Verifying...' : resetStep === 1 ? 'Request Reset Code' : 'Save New Password'}
                     </button>
@@ -394,25 +395,25 @@ export const UserAccountModal: React.FC<UserAccountModalProps> = ({
               ) : (
                 <>
                   <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">Email Address *</label>
+                    <label className="block text-xs font-bold text-gray-300 mb-1">Email Address *</label>
                     <input
                       type="email"
                       required
                       placeholder="you@example.com"
                       value={email}
                       onChange={e => setEmail(e.target.value)}
-                      className="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-xs text-gray-900 focus:outline-hidden focus:border-green-600"
+                      className="w-full bg-[#0A0D14] border border-white/20 rounded-xl px-3 py-2 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-red-500"
                     />
                   </div>
 
                   <div>
                     <div className="flex items-center justify-between mb-1">
-                      <label className="text-xs font-bold text-gray-700">Password *</label>
+                      <label className="text-xs font-bold text-gray-300">Password *</label>
                       {mode === 'login' && (
                         <button
                           type="button"
                           onClick={() => { setMode('forgot'); setResetStep(1); }}
-                          className="text-[11px] text-green-700 hover:underline"
+                          className="text-[11px] text-red-400 hover:underline"
                         >
                           Forgot password?
                         </button>
@@ -424,14 +425,14 @@ export const UserAccountModal: React.FC<UserAccountModalProps> = ({
                       placeholder="••••••••"
                       value={password}
                       onChange={e => setPassword(e.target.value)}
-                      className="w-full bg-white border border-gray-300 rounded-xl px-3 py-2 text-xs text-gray-900 focus:outline-hidden focus:border-green-600"
+                      className="w-full bg-[#0A0D14] border border-white/20 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-red-500"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full py-2.5 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white font-bold text-xs shadow-xs transition-colors"
+                    className="w-full py-2.5 rounded-xl bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black text-xs shadow-md shadow-red-700/40 transition-all border border-red-500/30"
                   >
                     {loading ? 'Processing...' : mode === 'login' ? 'Sign In' : 'Create Account'}
                   </button>
@@ -440,12 +441,12 @@ export const UserAccountModal: React.FC<UserAccountModalProps> = ({
             </form>
 
             {/* Google OAuth Button */}
-            <div className="mt-3 pt-3 border-t border-gray-100">
+            <div className="mt-3 pt-3 border-t border-white/10">
               <button
                 type="button"
                 onClick={handleGoogleAuth}
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2 p-2.5 rounded-xl border border-gray-300 hover:bg-gray-50 text-xs font-bold text-gray-700 transition-colors"
+                className="w-full flex items-center justify-center gap-2 p-2.5 rounded-xl border border-white/20 hover:bg-white/10 text-xs font-bold text-white transition-colors"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -458,29 +459,29 @@ export const UserAccountModal: React.FC<UserAccountModalProps> = ({
             </div>
 
             {/* Quick Demo Credentials helper */}
-            <div className="mt-4 pt-3 border-t border-gray-100 bg-gray-50 p-2.5 rounded-xl">
-              <span className="text-[10px] font-bold text-gray-500 uppercase block mb-1">
-                Quick 1-Click Demo Accounts:
+            <div className="mt-4 pt-3 border-t border-white/10 bg-[#0A0D14] p-2.5 rounded-xl border border-white/5">
+              <span className="text-[10px] font-bold text-gray-400 uppercase block mb-1">
+                Quick 1-Click Accounts:
               </span>
               <div className="flex flex-wrap gap-1.5">
                 <button
                   type="button"
-                  onClick={() => fillQuickAccount('superadmin@safe2odds.ng', 'Safe2Odds2026!')}
-                  className="px-2 py-1 bg-red-100 hover:bg-red-200 text-red-900 rounded text-[10px] font-bold"
+                  onClick={() => fillQuickAccount('sirrodstephen@gmail.com', 'Safe2Odds2026!')}
+                  className="px-2 py-1 bg-red-950/80 hover:bg-red-900 border border-red-700/60 text-red-300 rounded text-[10px] font-bold"
                 >
                   Super Admin
                 </button>
                 <button
                   type="button"
                   onClick={() => fillQuickAccount('moderator@safe2odds.ng', 'Safe2Odds2026!')}
-                  className="px-2 py-1 bg-blue-100 hover:bg-blue-200 text-blue-900 rounded text-[10px] font-bold"
+                  className="px-2 py-1 bg-blue-950/80 hover:bg-blue-900 border border-blue-700/60 text-blue-300 rounded text-[10px] font-bold"
                 >
                   Moderator
                 </button>
                 <button
                   type="button"
                   onClick={() => fillQuickAccount('punter@safe2odds.ng', 'Safe2Odds2026!')}
-                  className="px-2 py-1 bg-green-100 hover:bg-green-200 text-green-900 rounded text-[10px] font-bold"
+                  className="px-2 py-1 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-700/60 text-emerald-300 rounded text-[10px] font-bold"
                 >
                   Pro Punter
                 </button>

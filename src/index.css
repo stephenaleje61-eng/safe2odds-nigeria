@@ -8,8 +8,8 @@
 
   body {
     font-family: var(--font-sans);
-    background-color: #F3F4F6;
-    color: #111827;
+    background-color: #0B0E14;
+    color: #F3F4F6;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -18,9 +18,10 @@
   }
 }
 
-/* Custom smooth scroll and scrollbar */
+/* Custom smooth scroll and red-accented dark scrollbar */
 html {
   scroll-behavior: smooth;
+  color-scheme: dark;
 }
 
 ::-webkit-scrollbar {
@@ -29,14 +30,14 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #0f131a;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #272f3d;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #dc2626;
 }

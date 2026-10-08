@@ -43,6 +43,7 @@ export function setStoredAuthToken(token: string | null) {
 async function request<T>(endpoint: string, options: RequestInit = {}): Promise<{ success: boolean; data?: T; error?: string }> {
   const token = getStoredAuthToken();
   const headers: Record<string, string> = {
+    'Accept': 'application/json',
     'Content-Type': 'application/json',
     ...(options.headers as Record<string, string> || {}),
   };
@@ -57,14 +58,63 @@ async function request<T>(endpoint: string, options: RequestInit = {}): Promise<
       headers,
     });
 
-    const json = await res.json();
-    if (json.success) {
-      return { success: true, data: json.data };
+    const contentType = res.headers.get('content-type') || '';
+    const isJson = contentType.includes('application/json');
+
+    if (isJson) {
+      let json: any;
+      try {
+        json = await res.json();
+      } catch (parseErr) {
+        return { 
+          success: false, 
+          error: `Server response could not be parsed (Status ${res.status}). Please try again.` 
+        };
+      }
+
+      if (res.ok && json.success) {
+        return { success: true, data: json.data };
+      }
+
+      // Extract clear message from structured error response
+      const serverMsg = json.error?.message || json.message || json.error;
+      if (typeof serverMsg === 'string' && serverMsg.trim()) {
+        return { success: false, error: serverMsg };
+      }
+
+      return { 
+        success: false, 
+        error: `Request failed with status ${res.status}. Please try again.` 
+      };
     } else {
-      return { success: false, error: json.error?.message || 'Operation failed' };
+      // Non-JSON response (e.g., HTML error page, 502/503/504 gateway error, proxy redirect)
+      const rawText = await res.text().catch(() => '');
+      
+      if (res.status === 404) {
+        return { success: false, error: 'The requested service endpoint was not found (404).' };
+      }
+      if (res.status === 429) {
+        return { success: false, error: 'Too many requests. Please wait a moment and try again.' };
+      }
+      if (res.status === 502 || res.status === 503 || res.status === 504) {
+        return { success: false, error: 'Service temporarily unavailable. Please retry in a few moments.' };
+      }
+      if (!res.ok) {
+        return { success: false, error: `Server communication error (${res.status} ${res.statusText || 'Error'}).` };
+      }
+
+      // If ok but non-JSON (unexpected in API)
+      return { 
+        success: false, 
+        error: 'Unexpected server response format. Please refresh the page and try again.' 
+      };
     }
   } catch (err: any) {
-    return { success: false, error: err.message || 'Network communication error' };
+    const msg = err?.message || '';
+    if (msg.includes('Failed to fetch') || msg.includes('NetworkError') || msg.includes('Load failed')) {
+      return { success: false, error: 'Unable to reach the server. Please check your internet connection.' };
+    }
+    return { success: false, error: msg || 'Network communication error.' };
   }
 }
 

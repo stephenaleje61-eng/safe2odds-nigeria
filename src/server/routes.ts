@@ -882,3 +882,8 @@ apiRouter.post('/booking-codes/generate', (_req: Request, res: Response) => {
   const codes = generateNigerianBookingCodes();
   return sendSuccess(res, codes);
 });
+
+// Catch-all 404 handler for undefined API routes
+apiRouter.all('*', (req: Request, res: Response) => {
+  return sendError(res, 'ENDPOINT_NOT_FOUND', `API endpoint '${req.method} ${req.originalUrl}' does not exist.`, 404);
+});

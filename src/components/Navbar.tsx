@@ -12,7 +12,8 @@ import {
   Newspaper,
   CheckCircle,
   MessageCircle,
-  Bell
+  Bell,
+  Crown
 } from 'lucide-react';
 import { AppSettings, UserProfile, NotificationItem } from '../types';
 import { NotificationDropdown } from './NotificationDropdown';
@@ -64,7 +65,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const isStaff = currentUser && ['moderator', 'admin', 'super_admin'].includes(currentUser.role);
 
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-gray-200">
+    <header className="sticky top-0 z-40 bg-[#0E121A]/95 backdrop-blur-md border-b border-red-950/40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           
@@ -72,17 +73,17 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center gap-3">
             <button 
               onClick={() => handleNavClick('home')}
-              className="flex items-center gap-2.5 text-left focus:outline-hidden"
+              className="flex items-center gap-2.5 text-left focus:outline-hidden group"
             >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#16A34A] to-red-600 flex items-center justify-center text-white shadow-md shadow-green-700/20 shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center text-white shadow-lg shadow-red-700/30 shrink-0 border border-red-500/30 group-hover:scale-105 transition-transform">
                 <span className="text-xl font-black">2</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-lg sm:text-xl font-extrabold tracking-tight text-[#111827] leading-none flex items-center gap-1.5">
+                <span className="text-lg sm:text-xl font-black tracking-tight text-white leading-none flex items-center gap-1.5">
                   <span>2 Sure Odd</span>
-                  <span className="text-red-600">Football</span>
+                  <span className="text-red-500">Football</span>
                 </span>
-                <span className="text-[11px] font-medium text-gray-500 mt-0.5 hidden sm:inline">
+                <span className="text-[11px] font-medium text-gray-400 mt-0.5 hidden sm:inline">
                   Verified Real Matches & Community
                 </span>
               </div>
@@ -97,16 +98,21 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => handleNavClick(item.id)}
-                  className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors whitespace-nowrap ${
+                  className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all whitespace-nowrap ${
                     isActive
-                      ? 'bg-green-50 text-green-700 border border-green-200/80 shadow-2xs font-bold'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                      ? 'bg-red-600 text-white shadow-md shadow-red-600/30 font-black'
+                      : 'text-gray-300 hover:text-white hover:bg-white/5'
                   }`}
                 >
                   {item.label}
                   {item.id === 'chat' && (
-                    <span className="ml-1.5 text-[9px] bg-red-600 text-white font-black px-1.5 py-0.2 rounded-full animate-pulse">
+                    <span className="ml-1.5 text-[9px] bg-red-600 text-white font-black px-1.5 py-0.2 rounded-full animate-pulse border border-white/20">
                       LIVE
+                    </span>
+                  )}
+                  {item.id === 'livescores' && (
+                    <span className="ml-1.5 text-[9px] bg-emerald-500/20 text-emerald-400 font-black px-1.5 py-0.2 rounded-full border border-emerald-500/30">
+                      REAL
                     </span>
                   )}
                 </button>
@@ -117,12 +123,12 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* ZONE 3: Action Buttons */}
           <div className="flex items-center gap-1.5 sm:gap-2.5">
             
-            {/* Join WhatsApp prominent button */}
+            {/* Join WhatsApp button */}
             <a
               href={settings.whatsAppLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold px-3 py-2 rounded-xl shadow-xs transition-transform active:scale-95"
+              className="inline-flex items-center gap-1.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white text-xs font-bold px-3 py-2 rounded-xl shadow-md shadow-red-700/30 transition-transform active:scale-95 border border-red-500/30"
             >
               <MessageCircle className="w-3.5 h-3.5 fill-current" />
               <span className="hidden sm:inline">Join WhatsApp</span>
@@ -141,10 +147,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             {currentUser ? (
               <button
                 onClick={() => onOpenProfile(currentUser.username)}
-                className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-gray-100 transition-colors"
+                className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-white/10 transition-colors"
                 title={`Profile: @${currentUser.username}`}
               >
-                <div className="w-8 h-8 rounded-xl overflow-hidden border border-green-500/40 bg-gray-100 shrink-0">
+                <div className="w-8 h-8 rounded-xl overflow-hidden border border-red-500/50 bg-[#161B24] shrink-0">
                   <img
                     src={currentUser.avatar || '/src/assets/images/football_tactics_guide_1791379711012.jpg'}
                     alt={currentUser.username}
@@ -153,10 +159,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   />
                 </div>
                 <div className="hidden xl:flex flex-col text-left">
-                  <span className="text-xs font-bold text-gray-900 leading-tight truncate max-w-[90px]">
+                  <span className="text-xs font-bold text-white leading-tight truncate max-w-[90px]">
                     {currentUser.username}
                   </span>
-                  <span className="text-[10px] text-green-700 font-extrabold leading-none tabular-nums">
+                  <span className="text-[10px] text-red-400 font-black leading-none tabular-nums">
                     {currentUser.points} pts
                   </span>
                 </div>
@@ -164,33 +170,33 @@ export const Navbar: React.FC<NavbarProps> = ({
             ) : (
               <button
                 onClick={onOpenUserModal}
-                className="px-3 py-2 text-xs font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors flex items-center gap-1.5"
+                className="px-3.5 py-2 text-xs font-bold text-white bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl transition-all flex items-center gap-1.5 active:scale-95"
               >
-                <User className="w-3.5 h-3.5" />
+                <User className="w-3.5 h-3.5 text-red-400" />
                 <span>Sign In</span>
               </button>
             )}
 
-            {/* Staff Admin Dashboard trigger */}
+            {/* Staff Admin Portal trigger */}
             <button
               onClick={onOpenAdmin}
               title={isStaff ? 'Staff Portal' : 'Admin Login'}
-              className={`p-2 rounded-xl transition-colors relative ${
+              className={`p-2 rounded-xl transition-all relative ${
                 currentTab === 'admin'
-                  ? 'bg-gray-900 text-white'
-                  : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
+                  ? 'bg-red-600 text-white shadow-md'
+                  : 'text-gray-400 hover:text-white hover:bg-white/10'
               }`}
             >
               <Lock className="w-4 h-4" />
               {isStaff && (
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-green-500 rounded-full" />
+                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full animate-ping" />
               )}
             </button>
 
             {/* Mobile Hamburger Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
+              className="lg:hidden p-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-xl transition-colors"
               aria-label="Toggle menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -201,7 +207,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Dropdown Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-gray-200 bg-white px-4 pt-3 pb-6 shadow-xl animate-in slide-in-from-top-2 duration-150">
+        <div className="lg:hidden border-t border-red-950/40 bg-[#0E121A] px-4 pt-3 pb-6 shadow-2xl animate-in slide-in-from-top-2 duration-150">
           <div className="grid grid-cols-2 gap-2 mb-4">
             {navItems.map(item => {
               const isActive = currentTab === item.id;
@@ -209,32 +215,29 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={item.id}
                   onClick={() => handleNavClick(item.id)}
-                  className={`flex items-center justify-between p-3 rounded-xl text-xs font-semibold text-left transition-colors ${
+                  className={`flex items-center justify-between p-3 rounded-xl text-xs font-bold text-left transition-colors ${
                     isActive
-                      ? 'bg-green-600 text-white shadow-xs'
-                      : 'bg-gray-50 text-gray-800 hover:bg-gray-100'
+                      ? 'bg-red-600 text-white shadow-md'
+                      : 'bg-white/5 text-gray-200 hover:bg-white/10'
                   }`}
                 >
                   <span>{item.label}</span>
-                  {item.id === 'vip' && (
-                    <span className="text-[9px] bg-amber-400 text-gray-900 font-extrabold px-1 rounded">VIP</span>
-                  )}
                 </button>
               );
             })}
           </div>
 
-          <div className="pt-3 border-t border-gray-100 flex flex-col gap-2">
+          <div className="pt-3 border-t border-white/10 flex flex-col gap-2">
             {currentUser ? (
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
                   onOpenProfile(currentUser.username);
                 }}
-                className="w-full flex items-center justify-between p-3 bg-gray-50 rounded-xl text-xs font-bold text-gray-900"
+                className="w-full flex items-center justify-between p-3 bg-white/5 rounded-xl text-xs font-bold text-white border border-white/10"
               >
                 <span>My Profile (@{currentUser.username})</span>
-                <span className="text-green-700 font-extrabold">{currentUser.points} pts</span>
+                <span className="text-red-400 font-black">{currentUser.points} pts</span>
               </button>
             ) : (
               <button
@@ -242,7 +245,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   setMobileMenuOpen(false);
                   onOpenUserModal();
                 }}
-                className="w-full py-2.5 rounded-xl bg-gray-900 text-white text-xs font-bold text-center"
+                className="w-full py-2.5 rounded-xl bg-red-600 text-white text-xs font-black text-center shadow-md shadow-red-700/30"
               >
                 Sign In / Register
               </button>
@@ -252,7 +255,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               href={settings.whatsAppLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center justify-center gap-2 bg-[#16A34A] text-white py-2.5 rounded-xl text-xs font-bold shadow-xs"
+              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-red-700 text-white py-2.5 rounded-xl text-xs font-bold shadow-md"
             >
               <MessageCircle className="w-4 h-4 fill-current" /> Join Official WhatsApp Group
             </a>
@@ -262,7 +265,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setMobileMenuOpen(false);
                 onOpenAdmin();
               }}
-              className="w-full flex items-center justify-center gap-2 bg-gray-900 text-white py-2.5 rounded-xl text-xs font-semibold"
+              className="w-full flex items-center justify-center gap-2 bg-white/10 text-white py-2.5 rounded-xl text-xs font-bold"
             >
               <Lock className="w-3.5 h-3.5" /> Staff Management Portal
             </button>
